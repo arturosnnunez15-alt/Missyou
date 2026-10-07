@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Ti, Mi Amor ❤️</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #2b0818 0%, #12030a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: #fff;
+      position: relative;
+      padding: 20px 15px;
+      user-select: none;
+    }
+
+    /* Canvas para particulas e interaccion de toque */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Tarjeta Romántica Glassmorphism */
+    .romantic-card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 182, 193, 0.25);
+      border-radius: 36px;
+      padding: 45px 28px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 105, 180, 0.15);
+      text-align: center;
+      max-width: 460px;
+      width: 95%;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: floatCard 4s ease-in-out infinite alternate;
+      position: relative;
+      margin: auto;
+    }
+
+    @keyframes floatCard {
+      0% { transform: translateY(0px); box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 15px rgba(255, 105, 180, 0.1); }
+      100% { transform: translateY(-10px); box-shadow: 0 35px 70px rgba(255, 105, 180, 0.25), inset 0 0 25px rgba(255, 105, 180, 0.25); }
+    }
+
+    /* Corazón palpitante superior */
+    .heart-glow {
+      font-size: 3.2rem;
+      margin-bottom: 15px;
+      display: inline-block;
+      animation: heartbeat 1.4s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      filter: drop-shadow(0 0 15px #ff2a6d);
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.22); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.18); }
+      70% { transform: scale(1); }
+    }
+
+    .title-romantic {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.3rem;
+      color: #ffb6c1;
+      margin-bottom: 25px;
+      text-shadow: 0 0 12px rgba(255, 182, 193, 0.6);
+    }
+
+    /* Estilos del Poema */
+    .poem-box {
+      line-height: 1.9;
+      font-size: 1.05rem;
+      color: #fce4ec;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    .poem-line {
+      opacity: 0;
+      transform: translateY(15px);
+      animation: lineAppear 0.8s ease-out forwards;
+      margin-bottom: 6px;
+    }
+
+    .highlight-line {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #ff4081;
+      font-weight: 700;
+      margin: 12px 0 6px 0;
+      text-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+    }
+
+    @keyframes lineAppear {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Subtítulo táctil sugerente */
+    .touch-hint {
+      margin-top: 28px;
+      font-size: 0.85rem;
+      color: #ff80ab;
+      font-weight: 500;
+      letter-spacing: 1px;
+      animation: pulseGlow 2s infinite;
+      text-transform: uppercase;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    /* Pétalos cayendo */
+    .petals-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .petal {
+      position: absolute;
+      top: -50px;
+      background: radial-gradient(circle at 30% 30%, #ff80ab, #c2185b);
+      border-radius: 15px 0 15px 0;
+      opacity: 0.8;
+      animation: fall 10s linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateY(50vh) rotate(180deg) translateX(50px);
+      }
+      100% {
+        transform: translateY(105vh) rotate(360deg) translateX(-30px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas para fuegos de corazones e interacción -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Lluvia de Pétalos -->
+  <div class="petals-container" id="petals"></div>
+
+  <!-- Tarjeta Romántica Central -->
+  <div class="romantic-card">
+    <div class="heart-glow">💖</div>
+    <h1 class="title-romantic">Para el amor de mi vida</h1>
+
+    <div class="poem-box">
+      <p class="poem-line highlight-line" style="animation-delay: 0.3s;">Te extraño...</p>
+      <p class="poem-line" style="animation-delay: 0.8s;">Como se extrañan las noches sin estrellas,</p>
+      <p class="poem-line" style="animation-delay: 1.3s;">como se extrañan las mañanas bellas,</p>
+      <p class="poem-line" style="animation-delay: 1.8s;">no estar contigo, por Dios que me hace daño.</p>
+      
+      <p class="poem-line highlight-line" style="animation-delay: 2.4s;">Te extraño...</p>
+      <p class="poem-line" style="animation-delay: 2.9s;">Cuando camino, cuando lloro, cuando río,</p>
+      <p class="poem-line" style="animation-delay: 3.4s;">cuando el Sol brilla, cuando hace mucho frío,</p>
+      <p class="poem-line" style="animation-delay: 3.9s; font-weight: 500; color: #ff80ab;">porque te siento como algo muy mío. ✨</p>
+    </div>
+
+    <p class="touch-hint">✨ Toca la pantalla para enviarte mi amor ✨</p>
+  </div>
+
+  <script>
+    // Generador de Pétalos Flotantes
+    const petalsContainer = document.getElementById('petals');
+    for (let i = 0; i < 18; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      const size = Math.random() * 12 + 10;
+      petal.style.width = `${size}px`;
+      petal.style.height = `${size * 1.3}px`;
+      petal.style.left = `${Math.random() * 100}%`;
+      petal.style.animationDelay = `${Math.random() * 8}s`;
+      petal.style.animationDuration = `${7 + Math.random() * 6}s`;
+      petalsContainer.appendChild(petal);
+    }
+
+    // Interactive Particle Canvas (Corazones y Destellos)
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class FloatingHeart {
+      constructor(x, y, isBurst = false) {
+        this.x = x || Math.random() * canvas.width;
+        this.y = y || canvas.height + 20;
+        this.size = Math.random() * 14 + 8;
+        this.speedY = isBurst ? (Math.random() - 0.7) * 5 : - (Math.random() * 1.5 + 0.8);
+        this.speedX = isBurst ? (Math.random() - 0.5) * 6 : (Math.random() - 0.5) * 1.2;
+        this.opacity = 1;
+        this.color = `hsl(${Math.random() * 40 + 330}, 100%, 70%)`;
+        this.isBurst = isBurst;
+        this.rotation = Math.random() * Math.PI * 2;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
+
+        // Dibujar forma de corazón
+        ctx.beginPath();
+        const topCurveHeight = this.size * 0.3;
+        ctx.moveTo(0, topCurveHeight);
+        ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+        ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+        ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+        ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.isBurst) {
+          this.opacity -= 0.015;
+          this.speedY += 0.03; // levisima gravedad
+        } else {
+          if (this.y < -30) {
+            this.y = canvas.height + 20;
+            this.x = Math.random() * canvas.width;
+          }
+        }
+      }
+    }
+
+    let particles = [];
+
+    // Inicializar corazones de fondo
+    for (let i = 0; i < 25; i++) {
+      particles.push(new FloatingHeart());
+    }
+
+    // Evento de toque/click para disparar ráfaga de corazones
+    function createBurst(e) {
+      const x = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth / 2;
+      const y = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
+
+      for (let i = 0; i < 15; i++) {
+        particles.push(new FloatingHeart(x, y, true));
+      }
+    }
+
+    window.addEventListener('click', createBurst);
+    window.addEventListener('touchstart', createBurst);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, index) => {
+        p.update();
+        p.draw();
+        if (p.isBurst && p.opacity <= 0) {
+          particles.splice(index, 1);
+        }
+      });
+    }
+
+    animate();
+  </script>
+</body>
+</html>
